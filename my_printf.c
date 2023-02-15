@@ -6,6 +6,8 @@
 int my_printf(char * restrict format, ...)
 {
     char* str;
+    va_list args;
+    va_start(format, args);
 
     for(int i = 0; i < format; i++)
     {
@@ -13,7 +15,31 @@ int my_printf(char * restrict format, ...)
         {
             switch(str)
             {
-                case %d:
+                case 'd' :
+                va_arg()
+                break;
+
+                case 'o' :
+                return int str;
+                break;
+
+                case 'u' :
+                return int str;
+                break;
+
+                case 'x' :
+                return int str;
+                break;
+
+                case 'c' :
+                return int str;
+                break;
+
+                case 's' :
+                return int str;
+                break;
+
+                case 'p' :
                 return int str;
                 break;
             }
