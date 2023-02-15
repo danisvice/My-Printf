@@ -3,6 +3,9 @@
 
 ## Task
 TODO - What is the problem? And where is the challenge?
++ create variadic function
++ challenge is to use syscalls in C to recreate printf()
++ implement switch/case statements 
 
 ## Description
 TODO - How have you solved the problem?
