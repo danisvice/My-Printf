@@ -3,33 +3,40 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-#define BUF_SIZE 256;
-
 int my_printf(char * restrict format, ...)
 {
-    char buf[256];
+    unsigned int i;
+    char* input;
+    char* s;
+    char* convert(unsigned int, int);
+
     va_list args;
     va_start(args, format);
-    unsigned int i;
-    int buf_i = 0;
-
-    for(int i = 0; format[i] != '\0'; i++)
+    
+    for(input = format; *input != '\0'; input++)
     {
+        while(*input != '%')
+        {
+            putchar(*input);
+            input++;
+        }
         
-        if(format[i] != '%')
+        input++;
+        
         {
-            write(1, &format[i], 1);
-            buf[buf_i++] = format[i]; 
-        } 
-        else 
-        {
-            //VARIABLE CONVERSION
-            switch(format[i])
+            //FETCH & EXECUTE VARIABLE CONVERSION
+            switch(*input)
             {
                 case 'd' :
                 {
-                format[i] = va_arg(args, int);
-                
+                    i = va_arg(args, int);
+                    if(i<0)
+                    {
+                        i = -1;
+                        putchar('-');
+                    }
+                    puts(convert(i,10));
+                    break;
                 }
 
                 case 'o' :
@@ -39,27 +46,29 @@ int my_printf(char * restrict format, ...)
 
                 case 'u' :
                 {
-                    format[i] = va_args(args, unsigned decimal);
+                    format[i] = va_arg(args, unsigned decimal);
                 }
 
                 case 'x' :
                 {
-                    format[i] = va_args(args, unsigned hex);
+                    format[i] = va_arg(args, unsigned hex);
                 }
 
                 case 'c' :
                 {
-                    format[i] = va_args(args, char);
+                    i = va_arg(args, int);
+                    putchar(i);
+                    break;
                 }
 
                 case 's' :
                 {
-                    format[i] = va_args(args, char*);
+                    format[i] = va_arg(args, char*);
                 }
 
                 case 'p' :
                 {
-                    format[i] = va_args(args, void*);
+                    format[i] = va_arg(args, void*);
                 }
             }
         }
