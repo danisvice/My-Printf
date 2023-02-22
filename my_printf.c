@@ -3,46 +3,65 @@
 #include <unistd.h>
 #include <stdarg.h>
 
+#define BUF_SIZE 256;
+
 int my_printf(char * restrict format, ...)
 {
-    char* str;
+    char buf[256];
     va_list args;
-    va_start(format, args);
+    va_start(args, format);
+    unsigned int i;
+    int buf_i = 0;
 
-    for(int i = 0; i < format; i++)
+    for(int i = 0; format[i] != '\0'; i++)
     {
-        write(1, str, 100)
+        
+        if(format[i] != '%')
         {
-            switch(str)
+            write(1, &format[i], 1);
+            buf[buf_i++] = format[i]; 
+        } 
+        else 
+        {
+            //VARIABLE CONVERSION
+            switch(format[i])
             {
                 case 'd' :
-                va_arg()
-                break;
+                {
+                format[i] = va_arg(args, int);
+                
+                }
 
                 case 'o' :
-                return int str;
-                break;
+                {
+                    format[i] = va_arg(args, unsigned octal);
+                }
 
                 case 'u' :
-                return int str;
-                break;
+                {
+                    format[i] = va_args(args, unsigned decimal);
+                }
 
                 case 'x' :
-                return int str;
-                break;
+                {
+                    format[i] = va_args(args, unsigned hex);
+                }
 
                 case 'c' :
-                return int str;
-                break;
+                {
+                    format[i] = va_args(args, char);
+                }
 
                 case 's' :
-                return int str;
-                break;
+                {
+                    format[i] = va_args(args, char*);
+                }
 
                 case 'p' :
-                return int str;
-                break;
+                {
+                    format[i] = va_args(args, void*);
+                }
             }
-        };
+        }
     }
 }
