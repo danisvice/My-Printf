@@ -4,17 +4,19 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-void my_printf(char* format, va_list args);
+void my_printf(char* format, ...);
 char* convert(unsigned int, int);
 
 int main(int argc, char* argv[])
 {
-    my_printf(argv[1], NULL);
+    my_printf(argv[1]);
     return 0;
 }
 
-void my_printf(char* format, va_list args)
+void my_printf(char* format, ...)
 {
+    va_list args;
+    va_start(args, format);
     unsigned int i;
     char* input;
     char* s;
@@ -22,14 +24,14 @@ void my_printf(char* format, va_list args)
     
     for(input = format; *input != '\0'; input++)
     {
-        while(*input != '%')
+        if(*input != '%')
         {
-                putchar(*input);
-                input++;
+            write(1, input, 1);    
         }
+        else
         input++;
         
-            //FETCH & EXECUTE VARIABLE CONVERSION
+        //FETCH & EXECUTE VARIABLE CONVERSION
         switch(*input)
         {
                 case 'd' : i = va_arg(args, int);
@@ -70,6 +72,10 @@ void my_printf(char* format, va_list args)
                                 intptr_t ptr_val = (intptr_t)p;
                                 write(1, convert(ptr_val, 16), strlen(convert(ptr_val, 16)));
                                 break;
+
+                default: 
+                    write(1, input-1, 2);
+                    break;
         }
     }
     va_end(args);
