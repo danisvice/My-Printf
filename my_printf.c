@@ -2,25 +2,23 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <stdint.h>
 
-// void my_printf(char* format, ...);
+void my_printf(char* format, va_list args);
 char* convert(unsigned int, int);
 
-// int main()
-// {
-//     my_printf("%s", "Hello World\n");
-//     return 0;
-// }
+int main(int argc, char* argv[])
+{
+    my_printf(argv[1], NULL);
+    return 0;
+}
 
-int my_printf(char* format, ...)
+void my_printf(char* format, va_list args)
 {
     unsigned int i;
     char* input;
     char* s;
     void* p;
-
-    va_list args;
-    va_start(args, format);
     
     for(input = format; *input != '\0'; input++)
     {
@@ -64,7 +62,7 @@ int my_printf(char* format, ...)
 
 
                 case 's' : s = va_arg(args, char*);
-                                write(1, &s, strlen(s));
+                                write(1, s, strlen(s));
                                 break;
                 
 
@@ -75,7 +73,7 @@ int my_printf(char* format, ...)
         }
     }
     va_end(args);
-    return 0;
+    //return 0;
 }
 
 char* convert(unsigned int n, int base)
