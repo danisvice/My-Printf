@@ -4,16 +4,11 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-void my_printf(char* format, ...);
+//void mprintf(char* format, ...);
 char* convert(unsigned int, int);
 
-int main(int argc, char* argv[])
-{
-    my_printf(argv[1]);
-    return 0;
-}
 
-void my_printf(char* format, ...)
+int my_printf(char* format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -24,16 +19,14 @@ void my_printf(char* format, ...)
     
     for(input = format; *input != '\0'; input++)
     {
-        if(*input != '%')
-        {
-            write(1, input, 1);    
-        }
-        else
+        if(*input == '%'){
         input++;
-        
         //FETCH & EXECUTE VARIABLE CONVERSION
         switch(*input)
         {
+                case '%' :      write(1, "%", 1);
+                                break;
+
                 case 'd' : i = va_arg(args, int);
                                 if(i<=0)
                                 {
@@ -77,9 +70,13 @@ void my_printf(char* format, ...)
                     write(1, input-1, 2);
                     break;
         }
+        }
+        else {
+                    write(1, input, 1);
+        }
     }
     va_end(args);
-    //return 0;
+    return 0;
 }
 
 char* convert(unsigned int n, int base)
