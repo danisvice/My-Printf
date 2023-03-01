@@ -3,6 +3,11 @@
   // Hover to view descriptions of existing attributes.
   "version": "0.2.0",
   "configurations": [
-  
+  {
+      "type": "gdb",
+      "request": "launch",
+      "name": "Name here",
+      "program": "${workspaceFolder}/${command:askProgramPath}"
+  }
   ]
 }
