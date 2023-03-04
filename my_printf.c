@@ -19,6 +19,9 @@ int my_printf(char* format, ...)
     void* p;
     int sum = 0;
     
+    //1.copy val of char* format -> char* input, avoids original data modification; input(format)
+    //origial value of format is not modified, only iterated over
+    //2.initialize iteration with a for-loop/ conditional statement
     for(input = format; *input != '\0'; input++)
     {
         if(*input == '%'){
@@ -76,8 +79,10 @@ int my_printf(char* format, ...)
 
                 case 'p' : p = va_arg(args, void*);
                                 intptr_t ptr_val = (intptr_t)p;
-                                write(1, convert(ptr_val, 16), strlen(convert(ptr_val, 16)));
-                                sum += strlen(convert(ptr_val, 16));
+                                char* hex_s = convert(ptr_val,16);
+                                write(1, "0x", 2);
+                                write(1,hex_s,strlen(hex_s));
+                                sum += strlen(hex_s) + 2;
                                 break;
 
                 default: 
@@ -113,5 +118,5 @@ char* convert(unsigned int n, int base)
     }
     while(n!=0);
     
-    return(ptr);
+    return ptr;
 }
