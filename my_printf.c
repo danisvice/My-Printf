@@ -67,8 +67,7 @@ int my_printf(char* format, ...)
 
                                 if(s == NULL)
                                 {
-                                    write(1,"NULL STRING (null)!\n",1);
-                                    sum++;
+                                   s = "(null)";
                                 }
                                 
                                 write(1, s, strlen(s));
