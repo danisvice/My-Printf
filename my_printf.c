@@ -36,7 +36,7 @@ int my_printf(char* format, ...)
                                 {
                                     write(1, "-", 1);
                                     d = -d;
-                                    sum ++;
+                                    sum++;
                                 } 
                                 
                                 write(1, convert(d, 10), strlen(convert(d, 10)));
@@ -67,10 +67,9 @@ int my_printf(char* format, ...)
 
                                 if(s == NULL)
                                 {
-                                    write(1,"NULL STRING (null)!",0);
-                                    sum += 0;
+                                    write(1,"NULL STRING (null)!\n",1);
+                                    sum++;
                                 }
-                                else 
                                 
                                 write(1, s, strlen(s));
                                 sum += strlen(s);
