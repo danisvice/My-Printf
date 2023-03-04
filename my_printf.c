@@ -34,10 +34,10 @@ int my_printf(char* format, ...)
                                 
                                 if(d < 0)
                                 {
+                                    write(1, "-", 1);
                                     d = -d;
-                                    sum++;
+                                    sum ++;
                                 } 
-                                else 
                                 
                                 write(1, convert(d, 10), strlen(convert(d, 10)));
                                 sum += strlen(convert(d, 10));
