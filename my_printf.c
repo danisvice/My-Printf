@@ -1,122 +1,113 @@
+#include <limits.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stddef.h>
 
-//void mprintf(char* format, ...);
-char* convert(unsigned int, int);
+int convert(char *dest, unsigned long long n, int base, const char *digits) {
+    char buffer[sizeof(n) * CHAR_BIT];
+    char *ptr = buffer;
+    int len = 0;
 
-int my_printf(char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    int d;
-    unsigned int i;
-    char* input;
-    char* s;
-    void* p;
-    int sum = 0;
-    
-    //1.copy val of char* format -> char* input, avoids original data modification; input(format)
-    //origial value of format is not modified, only iterated over
-    //2.initialize iteration with a for-loop/ conditional statement
-    for(input = format; *input != '\0'; input++)
-    {
-        if(*input == '%'){
-        input++;
-        //FETCH & EXECUTE VARIABLE CONVERSION
-        switch(*input)
-        {
-                case '%' :      write(1, "%", 1);
-                                sum++;
-                                break;
+    do {
+        *ptr++ = digits[n % base];
+        n /= base;
+    } while (n != 0);
 
-                case 'd' : d = va_arg(args, int);
-                                
-                                if(d < 0)
-                                {
-                                    write(1, "-", 1);
-                                    d = -d;
-                                    sum++;
-                                } 
-                                
-                                write(1, convert(d, 10), strlen(convert(d, 10)));
-                                sum += strlen(convert(d, 10));
-                                break;       
-                
-                case 'o' : i = va_arg(args, unsigned int);
-                                write(1, convert(i, 8),  strlen(convert(i, 8)));
-                                sum += strlen(convert(i, 8));
-                                break;
-             
-                case 'u' : i = va_arg(args, unsigned int);
-                                write(1, convert(i, 10), strlen(convert(i, 10)));
-                                sum += strlen(convert(i, 10));
-                                break;
-                
-                case 'x' : i = va_arg(args, unsigned int);
-                                write(1, convert(i, 16), strlen(convert(i, 16)));
-                                sum += strlen(convert(i,16));
-                                break;
-                
-                case 'c' : i = va_arg(args, int);
-                                write(1, &i, 1);
-                                sum++;
-                                break;
-
-                case 's' : s = va_arg(args, char*);
-
-                                if(s == NULL)
-                                {
-                                   s = "(null)";
-                                }
-                                
-                                write(1, s, strlen(s));
-                                sum += strlen(s);
-                                break;
-
-                case 'p' : 
-                            p = va_arg(args, void*);
-                            uintptr_t ptr_val = (uintptr_t)p;
-                            write(1, "0x", 2);
-                            write(1, convert(ptr_val, 16), strlen(convert(ptr_val, 16)));
-                            sum += strlen(convert(ptr_val, 16)) + 6;
-                            break;
-
-                default: 
-                                write(1, input-1, 2);
-                                sum += 2;
-                                break;
-        }
-        }
-        else 
-            {
-                write(1, input, 1);
-                sum++;
-            }            
-        
+    while (ptr > buffer) {
+        dest[len++] = *--ptr;
     }
-    va_end(args);
-    return sum;
+    dest[len] = '\0';
+    return len;
 }
 
-char* convert(unsigned int n, int base)
-{
-    static char Rep[] = "0123456789ABCDEF";
-    static char buffer[50];
-    char *ptr;
+int my_printf(const char *format, ...) {
+    static const char rep_lower[] = "0123456789abcdef";
+    static const char rep_upper[] = "0123456789ABCDEF";
+    unsigned long long n;
+    char buffer[sizeof(n) * CHAR_BIT + 3];
+    va_list args;
+    int i, len;
+    const char *input, *last;
+    const char *s;
+    char *r;
+    void *p;
+    int res = 0;
 
-    ptr = &buffer[49];
-    *ptr = '\0';
+    va_start(args, format);
+    for (input = last = format;; input++) {
+        /* scan for a conversion specification */
+        if (*input != '\0' && (*input != '%' || input[1] == '\0'))
+            continue;
+        if (input > last) {
+            /* output pending format string fragment */
+            res += write(1, last, input - last);
+        }
+        if (*input == '\0')
+            break;
+        input++;
+        last = input + 1;
+        //FETCH & EXECUTE VARIABLE CONVERSION
+        s = r = buffer;
+        switch (*input) {
+            case '%': *r = '%';
+                        len = 1;
+                        break;
 
-    do
-    {
-        *--ptr = Rep[n%base];
-        n /= base;
+        case 'd':  n = i = va_arg(args, int);
+                        if (i < 0) 
+                        {
+                            *r++ = '-';
+                            n = -n;
+                        }
+                        len = convert(r, n, 10, rep_lower) + (r - s);
+                        break;
+
+        case 'u':  n = va_arg(args, unsigned int);
+                        len = convert(r, n, 10, rep_lower);
+                        break;
+
+        case 'b': n = va_arg(args, unsigned int);
+                        len = convert(r, n, 2, rep_lower);
+                        break;
+
+        case 'o': n = va_arg(args, unsigned int);
+                        len = convert(r, n, 8, rep_lower);
+                        break;
+
+        case 'x': n = va_arg(args, unsigned int);
+                        len = convert(r, n, 16, rep_upper);
+                        break;
+
+        case 'X': n = va_arg(args, unsigned int);
+                        len = convert(r, n, 16, rep_upper);
+                        break;
+
+        case 'c': *r = (char)va_arg(args, int);
+                        len = 1;
+                        break;
+
+        case 's': s = va_arg(args, char *);
+                    if (s == NULL) 
+                    {
+                        s = "(null)";
+                    }
+                        len = strlen(s);
+                        break;
+
+        case 'p': p = va_arg(args, void *);
+                        n = (unsigned long long)(intptr_t)p;
+                        *r++ = '0';
+                        *r++ = 'x';
+                        len = convert(r, n, 16, rep_lower) + (r - s);
+                        break;
+
+        default: s = input - 1;
+                        len = 2;
+                        break;
+        }
+        res += write(1, s, len);
     }
-    while(n!=0);
-    
-    return ptr;
+    va_end(args);
+    return res;
 }
