@@ -77,13 +77,13 @@ int my_printf(char* format, ...)
                                 sum += strlen(s);
                                 break;
 
-                case 'p' : p = va_arg(args, void*);
-                                intptr_t ptr_val = (intptr_t)p;
-                                char* hex_s = convert(ptr_val,16);
-                                write(1, "0x", 2);
-                                write(1,hex_s,strlen(hex_s));
-                                sum += strlen(hex_s) + 2;
-                                break;
+                case 'p' : 
+                            p = va_arg(args, void*);
+                            uintptr_t ptr_val = (uintptr_t)p;
+                            write(1, "0x", 2);
+                            write(1, convert(ptr_val, 16), strlen(convert(ptr_val, 16)));
+                            sum += strlen(convert(ptr_val, 16)) + 6;
+                            break;
 
                 default: 
                                 write(1, input-1, 2);
