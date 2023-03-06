@@ -2,19 +2,33 @@
 ***
 
 ## Task
-TODO - What is the problem? And where is the challenge?
+
 + create variadic function
-+ challenge is to use syscalls in C to recreate printf()
++ challenge is to use syscalls in C to implement printf()
 + implement switch/case statements 
++ code refactorization to increase efficiency of program
 
 ## Description
-TODO - How have you solved the problem?
+
++ visualizing the flow of how it could work 
++ asking questions in the zoom calls
++ format specifier research on printf(), write(), strlen(), sizeof(), uintptr_t, strlen().
+- First begin implementing a convert() function in order to convert decimals into the 
+    correct input data type.
+- Second begine the int my_printf() function that will utilize a conditional statement,
+    to iterate & execute each variable conversion.
+- Third refactor the entire code for higher efficiency and clarity.
 
 ## Installation
-TODO - How to install your project? npm install? make? make re?
+
++ Project installed via the IDE terminal
++ Utilizing gcc to compile the program 
 
 ## Usage
-TODO - How does it work?
+
++ The project is a correct implementation of the printf() function in C. 
++ passes all gandalf unit tests 
++ works according to the custom variable conversion that were asked by the client. 
 ```
 ./my_project argument1 argument2
 ```
