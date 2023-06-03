@@ -21,16 +21,18 @@
 
 ## Installation
 
-+ Project installed via the IDE terminal
++ Project installed via terminal
 + Utilizing gcc to compile the program 
 
 ## Usage
 
 + The project is a correct implementation of the printf() function in C. 
-+ passes all gandalf unit tests 
++ Unit Test Developed
 + works according to the custom variable conversion that were asked by the client. 
+
+compile && run:
 ```
-./my_project argument1 argument2
+gcc my_printf.c -o ./my_printf
 ```
 
 ### The Core Team
