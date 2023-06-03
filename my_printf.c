@@ -113,5 +113,5 @@ int my_printf(const char *format, ...) {
 }
 
 int main() {
-    return my_printf("%d\n", 16);
+    return my_printf("%d\n", 9000234);
 }

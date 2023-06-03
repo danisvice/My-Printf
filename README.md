@@ -30,7 +30,7 @@
 + Unit Test Developed
 + works according to the custom variable conversion that were asked by the client. 
 
-compile && run:
+compile && execute:
 ```
 gcc my_printf.c -o ./my_printf
 ```
