@@ -111,3 +111,7 @@ int my_printf(const char *format, ...) {
     va_end(args);
     return res;
 }
+
+int main() {
+    return my_printf("%d\n", 16);
+}
